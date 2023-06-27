@@ -10,6 +10,24 @@ import os
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
 from conf.questions import sample_q
 
+# set page config
+
+st.set_page_config(page_title="Yinson GPT", page_icon=":robot_face:")
+
+
+# Hide footer made with Streamlit
+hide_streamlit_style = """
+            <style>
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown(
+    "<h1 style='text-align: center;'>Yinson Annual Report Chat Demo</h1>",
+    unsafe_allow_html=True,
+)
+
+
 DB_DIR: Final = "embeddings/chroma/"
 
 client_settings = chromadb.config.Settings(
@@ -55,7 +73,7 @@ def get_text(samp_select):
 
 
 # From here down is all the StreamLit UI.
-st.header("Yinson Annual Report Chat Demo")
+# st.header("Yinson Annual Report Chat Demo")
 chat_chain = make_chain(api_key=api_key, db_dir=DB_DIR)
 samp_select = st.selectbox(label="Select sample questions", options=sample_q)
 
@@ -63,7 +81,7 @@ samp_select = st.selectbox(label="Select sample questions", options=sample_q)
 if "messages" not in st.session_state:
     st.session_state.messages = [SystemMessage(content="You are a helpful assistant.")]
 
-user_input = get_text(samp_select=samp_select)
+user_input = None
 if user_input and api_key:
     st.session_state.messages.append(HumanMessage(content=user_input))
     with st.spinner("Thinking..."):
@@ -78,8 +96,9 @@ if user_input and api_key:
         else:
             message(msg.content, is_user=False, key=str(i) + "_ai")
 
-    # Retreive answer
-    # answer = response["answer"]
-    # source = response["source_documents"]
-    # st.write(answer)
-    # st.write(source)
+user_input = get_text(samp_select=samp_select)
+# Retreive answer
+# answer = response["answer"]
+# source = response["source_documents"]
+# st.write(answer)
+# st.write(source)
