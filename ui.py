@@ -74,7 +74,7 @@ def header_ui():
     img = f"{image_name}.png"
 
     st.markdown(
-        f"""<h5 style='text-align: center; width:100%; padding: 20px; border-radius: 5px; color: #FFEA0D; background-color:rgba(46,36,125,1); margin-left: 10px;'>
+        f"""<h5 style='text-align: center; width:100%; font-size: 20px; padding: 20px; border-radius: 5px; color: #FFEA0D; background-color:rgba(46,36,125,1); margin-left: 10px;'>
                         <center><b>{title}</b></center>
                     </h5>""",
         unsafe_allow_html=True,

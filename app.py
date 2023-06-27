@@ -52,7 +52,7 @@ with container:
             user_input = st.text_area("query:", key="input", height=100)
         submit_button = st.form_submit_button(label="Send")
 
-    if submit_button and user_input:
+    if submit_button and user_input and api_key:
         st.session_state.messages.append(HumanMessage(content=user_input))
         response = generate_response(user_input, api_key=api_key, DB_DIR=DB_DIR)
         # st.write(response)
