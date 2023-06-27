@@ -1,20 +1,13 @@
 import streamlit as st
 from streamlit_chat import message
-import chromadb
-from typing import Final
-from langchain.chat_models import ChatOpenAI
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
-from langchain.chains import ConversationalRetrievalChain
-import os
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
 from conf.questions import sample_q
+from utils import make_chain, DB_DIR
+from ui import header_ui
 
 # set page config
 
 st.set_page_config(page_title="Yinson GPT", page_icon=":robot_face:")
-
-
 # Hide footer made with Streamlit
 hide_streamlit_style = """
             <style>
@@ -22,83 +15,54 @@ hide_streamlit_style = """
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-st.markdown(
-    "<h1 style='text-align: center;'>Yinson Annual Report Chat Demo</h1>",
-    unsafe_allow_html=True,
-)
-
-
-DB_DIR: Final = "embeddings/chroma/"
-
-client_settings = chromadb.config.Settings(
-    chroma_db_impl="duckdb+parquet",
-    persist_directory=DB_DIR,
-    anonymized_telemetry=False,
-)
-
-with st.sidebar:
-    api_key = st.text_input(label="Enter Open AI API Key")
-
-
-def make_chain(api_key, db_dir=DB_DIR):
-    if api_key:
-        model = ChatOpenAI(
-            model_name="gpt-3.5-turbo", temperature=0.2, openai_api_key=api_key
-        )
-        embeddings = OpenAIEmbeddings(
-            openai_api_key=api_key,
-            model="text-embedding-ada-002",
-        )
-        vectordb = Chroma(
-            persist_directory=db_dir,
-            embedding_function=embeddings,
-            collection_name="Yonsin_Annual_Report_2023_1-25_pages",
-            client_settings=client_settings,
-        )
-        # expose this index in a retriever interface
-        retriever = vectordb.as_retriever(
-            search_type="similarity", search_kwargs={"k": 5}
-        )
-        return ConversationalRetrievalChain.from_llm(
-            model, retriever=retriever, return_source_documents=True
-        )
-
-
-def get_text(samp_select):
-    if samp_select:
-        input_text = st.text_input("Query: ", samp_select, key="input")
-    else:
-        input_text = st.text_input("Query: ", "", key="input")
-    return input_text
-
-
-# From here down is all the StreamLit UI.
-# st.header("Yinson Annual Report Chat Demo")
-chat_chain = make_chain(api_key=api_key, db_dir=DB_DIR)
-samp_select = st.selectbox(label="Select sample questions", options=sample_q)
-
-# initialize message history
+header_ui()
+st.write("##")
+# Initialise session state variables
 if "messages" not in st.session_state:
-    st.session_state.messages = [SystemMessage(content="You are a helpful assistant.")]
+    st.session_state["messages"] = [
+        SystemMessage(content="You are a helpful assistant.")
+    ]
 
-user_input = None
-if user_input and api_key:
-    st.session_state.messages.append(HumanMessage(content=user_input))
-    with st.spinner("Thinking..."):
-        response = chat_chain({"question": user_input, "chat_history": []})
-    st.session_state.messages.append(AIMessage(content=response["answer"]))
+# Sidebar - let user choose model, show total cost of current conversation, and let user clear the current conversation
+model = "gpt-4"
+api_key = "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"
 
-    # display message history
-    messages = st.session_state.get("messages", [])
-    for i, msg in enumerate(messages[1:]):
-        if i % 2 == 0:
-            message(msg.content, is_user=True, key=str(i) + "_user")
+
+# generate a response
+def generate_response(prompt, api_key, DB_DIR=DB_DIR):
+    # st.session_state["messages"].append({"role": "user", "content": prompt})
+    chat_chain = make_chain(api_key=api_key, db_dir=DB_DIR)
+    response = chat_chain({"question": prompt, "chat_history": []})
+    return response
+
+
+# # container for chat history
+response_container = st.container()
+# container for text box
+container = st.container()
+with container:
+    samp_select = st.selectbox(label="Select sample questions", options=sample_q)
+    with st.form(key="my_form", clear_on_submit=True):
+        if samp_select:
+            user_input = st.text_area(
+                "query:", value=samp_select, key="input", height=100
+            )
         else:
-            message(msg.content, is_user=False, key=str(i) + "_ai")
+            user_input = st.text_area("query:", key="input", height=100)
+        submit_button = st.form_submit_button(label="Send")
 
-user_input = get_text(samp_select=samp_select)
-# Retreive answer
-# answer = response["answer"]
-# source = response["source_documents"]
-# st.write(answer)
-# st.write(source)
+    if submit_button and user_input:
+        st.session_state.messages.append(HumanMessage(content=user_input))
+        response = generate_response(user_input, api_key=api_key, DB_DIR=DB_DIR)
+        # st.write(response)
+        st.session_state.messages.append(AIMessage(content=response["answer"]))
+
+    with response_container:
+        messages = st.session_state.get("messages", [])
+        for i, msg in enumerate(messages[1:]):
+            if i % 2 == 0:
+                # st.write(msg)
+                message(msg.content, is_user=True, key=str(i) + "_user")
+            else:
+                # st.write(dir(msg))
+                message(msg.content, is_user=False, key=str(i) + "_ai")
