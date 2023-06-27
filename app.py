@@ -25,7 +25,8 @@ if "messages" not in st.session_state:
 
 # Sidebar - let user choose model, show total cost of current conversation, and let user clear the current conversation
 model = "gpt-4"
-# api_key = "sk-5HWM8KIxYNFkibRSzll0T3BlbkFJ6sVY5v7YbstoBgpEnJIab"
+with st.sidebar:
+    api_key = st.text_input(label="Enter Open AI API Key")
 
 
 # generate a response
