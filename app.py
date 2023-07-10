@@ -7,7 +7,7 @@ from ui import header_ui
 
 # set page config
 
-st.set_page_config(page_title="Yinson GPT", page_icon=":robot_face:")
+st.set_page_config(page_title="Mapletree GPT", page_icon=":robot_face:")
 # Hide footer made with Streamlit
 hide_streamlit_style = """
             <style>

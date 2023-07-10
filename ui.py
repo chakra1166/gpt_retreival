@@ -70,11 +70,11 @@ import base64
 
 def header_ui():
     image_name = "logo"
-    title = "Yinson Annual Report Chat Demo"
+    title = "Sustainability Report Chat Demo"
     img = f"{image_name}.png"
 
     st.markdown(
-        f"""<h5 style='text-align: center; width:100%; font-size: 20px; padding: 20px; border-radius: 5px; color: #FFEA0D; background-color:rgba(46,36,125,1); margin-left: 10px;'>
+        f"""<h5 style='text-align: center; width:100%; font-size: 20px; padding: 20px; border-radius: 5px; color: #1A191F; background-color:rgba(231,130,4,1); margin-left: 10px;'>
                         <center><b>{title}</b></center>
                     </h5>""",
         unsafe_allow_html=True,
@@ -83,7 +83,7 @@ def header_ui():
     st.markdown(
         f"""
         <div style="margin-top: -73px; margin-left: -800px">
-                <center><img  src="data:image/png;base64,{base64.b64encode(open(img, "rb").read()).decode()}", width = "100" height = "80"></center>
+                <center><img  src="data:image/png;base64,{base64.b64encode(open(img, "rb").read()).decode()}", width = "180" height = "80"></center>
         </div>""",
         unsafe_allow_html=True,
     )

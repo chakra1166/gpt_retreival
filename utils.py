@@ -28,12 +28,12 @@ def make_chain(api_key, db_dir=DB_DIR):
         vectordb = Chroma(
             persist_directory=db_dir,
             embedding_function=embeddings,
-            collection_name="Yonsin_Annual_Report_2023_1-25_pages",
+            collection_name="mapletree_sustain_report",
             client_settings=client_settings,
         )
         # expose this index in a retriever interface
         retriever = vectordb.as_retriever(
-            search_type="similarity", search_kwargs={"k": 5}
+            search_type="similarity", search_kwargs={"k": 10}
         )
         return ConversationalRetrievalChain.from_llm(
             model, retriever=retriever, return_source_documents=True
