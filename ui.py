@@ -80,10 +80,10 @@ def header_ui():
         unsafe_allow_html=True,
     )
 
-    st.markdown(
-        f"""
-        <div style="margin-top: -73px; margin-left: -800px">
-                <center><img  src="data:image/png;base64,{base64.b64encode(open(img, "rb").read()).decode()}", width = "180" height = "80"></center>
-        </div>""",
-        unsafe_allow_html=True,
-    )
+    # st.markdown(
+    #     f"""
+    #     <div style="margin-top: -73px; margin-left: -800px">
+    #             <center><img  src="data:image/png;base64,{base64.b64encode(open(img, "rb").read()).decode()}", width = "180" height = "80"></center>
+    #     </div>""",
+    #     unsafe_allow_html=True,
+    # )
