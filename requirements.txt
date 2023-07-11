@@ -1,5 +1,5 @@
 streamlit
 streamlit_chat
-langchain
-chromadb
+langchain==0.0.198
+chromadb==0.3.26
 openai
