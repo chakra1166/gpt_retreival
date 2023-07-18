@@ -70,7 +70,7 @@ import base64
 
 def header_ui():
     image_name = "logo"
-    title = "Sustainability Report Chat Demo"
+    title = "Capitaland Annual Report Chat Demo"
     img = f"{image_name}.png"
 
     st.markdown(

@@ -28,7 +28,7 @@ def make_chain(api_key, db_dir=DB_DIR):
         vectordb = Chroma(
             persist_directory=db_dir,
             embedding_function=embeddings,
-            collection_name="mapletree_sustain_report",
+            collection_name="capitaland_sustain_report",
             client_settings=client_settings,
         )
         # expose this index in a retriever interface

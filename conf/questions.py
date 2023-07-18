@@ -1,5 +1,6 @@
 sample_q = [
-    "what are some sustainability highlights",
-    "Net zero roadmap approach",
-    "What are some of tenant engagement initiatives",
+    "What are some FY 2022 performance highlights",
+    "Mention names and designations of borad of directors",
+    "who is the Chief Executive Officer Retail & Workspace Singapore and Malaysia",
+    "List some FY 2022 key transactions in singapore",
 ]
